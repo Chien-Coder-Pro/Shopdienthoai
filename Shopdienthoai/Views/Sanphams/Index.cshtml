@@ -1,0 +1,63 @@
+@model List<Sanpham>
+@{
+    ViewData["Title"] = "Sản phẩm";
+}
+<div class="section-heading">
+    <div>
+        <h1>Quản lý sản phẩm</h1>
+        <p class="text-muted">@Model.Count sản phẩm · ngừng bán để giữ lịch sử hóa đơn.</p>
+    </div>
+    <a asp-action="Create" class="btn btn-success">+ Thêm sản phẩm</a>
+</div>
+<form class="filter-bar" method="get">
+    <input class="form-control" name="keyword" value="@ViewBag.Keyword" placeholder="Tìm theo tên điện thoại">
+    <button class="btn btn-success">Tìm kiếm</button>
+</form>
+<div class="panel table-responsive">
+    <table class="table align-middle">
+        <thead>
+            <tr>
+                <th>Sản phẩm</th>
+                <th>Hãng</th>
+                <th>Giá niêm yết</th>
+                <th>Tồn</th>
+                <th>Trạng thái</th>
+                <th>Thao tác</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var p in Model)
+            {
+                <tr>
+                    <td>
+                        <div class="table-product">
+                            <img src="@ShopRules.Image(p.HinhAnh)" alt="@p.TenSp">
+                            <div>
+                                <strong>@p.TenSp</strong>
+                                <small class="d-block text-muted">#@p.MaSp · @p.Ram / @p.Rom</small>
+                            </div>
+                        </div>
+                    </td>
+                    <td>@p.MaLspNavigation.TenLsp</td>
+                    <td>@ShopRules.Money(p.DonGia)</td>
+                    <td>
+                        <strong class="@(p.SoLuong <= 5 ? "text-danger" : "")">@p.SoLuong</strong>
+                    </td>
+                    <td>
+                        <span class="status-badge @(p.TrangThai == 1 ? "status-paid" : "status-cancel")">@(p.TrangThai == 1 ? "Đang bán" : "Ngừng bán")</span>
+                    </td>
+                    <td>
+                        <div class="table-actions">
+                            <a class="btn btn-outline-success btn-sm" asp-action="Edit" asp-route-id="@p.MaSp">Sửa</a>
+                            <a class="btn btn-light btn-sm" asp-action="Details" asp-route-id="@p.MaSp">Xem</a>
+                            @if (p.TrangThai == 1)
+                            {
+                                <a asp-action="Delete" asp-route-id="@p.MaSp" class="btn btn-outline-danger btn-sm">Ngừng bán</a>
+                            }
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

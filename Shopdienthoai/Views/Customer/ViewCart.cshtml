@@ -1,0 +1,73 @@
+@model CartViewModel
+@{
+	ViewData["Title"] = "Giỏ hàng";
+}
+<div class="section-heading">
+	<div>
+		<span class="eyebrow">LỰA CHỌN CỦA BẠN</span>
+		<h1>
+			Giỏ hàng<span class="text-green">.</span>
+		</h1>
+	</div>
+	<a asp-action="Index" class="text-green">Tiếp tục mua sắm →</a>
+</div>
+@foreach (var e in Model.Errors)
+{
+	<div class="alert alert-warning">@e</div>
+}
+@if (Model.Items.Count == 0)
+{
+	<div class="empty-state">
+		<div class="empty-symbol">＋</div>
+		<h3>Giỏ hàng đang chờ bạn</h3>
+		<p>Khám phá và chọn chiếc điện thoại yêu thích nhé.</p>
+		<a class="btn btn-success" asp-action="Index">Khám phá sản phẩm</a>
+	</div>
+}
+else
+{
+	<div class="row g-4">
+		<div class="col-lg-8">
+			<div class="panel">
+				@foreach (var line in Model.Items)
+				{
+					<div class="cart-row">
+						<a asp-action="Details" asp-route-id="@line.SanPham.MaSp">
+							<img src="@ShopRules.Image(line.SanPham.HinhAnh)" alt="@line.SanPham.TenSp">
+						</a>
+						<div class="cart-item-content">
+							<a class="fw-bold" asp-action="Details" asp-route-id="@line.SanPham.MaSp">@line.SanPham.TenSp</a>
+							<p class="text-muted mb-2">@ShopRules.Money(line.DonGia)</p>
+							<form asp-action="UpdateItem" method="post" class="d-flex gap-2 align-items-center">
+								<input type="hidden" name="id" value="@line.SanPham.MaSp">
+								<input class="form-control quantity" aria-label="Số lượng @line.SanPham.TenSp" name="quantity" type="number" min="1" max="@Math.Min(line.SanPham.SoLuong, 999)" value="@line.SoLuong">
+								<button class="btn btn-outline-success btn-sm">Cập nhật</button>
+							</form>
+						</div>
+						<div class="cart-item-end">
+							<strong>@ShopRules.Money(line.ThanhTien)</strong>
+							<form asp-action="RemoveItem" method="post">
+								<input type="hidden" name="id" value="@line.SanPham.MaSp">
+								<button class="btn btn-link text-danger btn-sm">Xóa</button>
+							</form>
+						</div>
+					</div>
+				}
+	<form asp-action="ClearCart" method="post" data-confirm="Xóa toàn bộ giỏ hàng?">
+					<button class="btn btn-outline-secondary btn-sm mt-3">Xóa giỏ hàng</button>
+				</form>
+			</div>
+		</div>
+		<div class="col-lg-4">
+			<div class="panel order-summary">
+				<h3>Tóm tắt giỏ hàng</h3>
+				<div class="summary-line">
+					<span>Tạm tính</span>
+					<strong>@ShopRules.Money(Model.TongTien)</strong>
+				</div>
+				<p class="muted-note">Ưu đãi thành viên được tính ở bước thanh toán theo hạng tài khoản của bạn.</p>
+				<a class="btn btn-success w-100 py-3" asp-action="CheckOut">Tiến hành đặt hàng →</a>
+			</div>
+		</div>
+	</div>
+}

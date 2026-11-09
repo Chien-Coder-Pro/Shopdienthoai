@@ -1,0 +1,20 @@
+@model Khuyenmai
+@{
+    ViewData["Title"] = "Xóa khuyến mãi";
+}
+<div class="panel narrow-panel">
+    <h1>Xóa khuyến mãi @Model.TenKm?</h1>
+    <p>@Model.LoaiKm · @ShopRules.Money(Model.GiaTriKm)</p>
+    @if (ViewBag.CannotDelete is true)
+    {
+        <p class="text-danger">Không thể xóa khuyến mãi mặc định hoặc đang được sản phẩm sử dụng.</p>
+    }
+    else
+    {
+        <form asp-action="Delete" asp-route-id="@Model.MaKm" method="post" class="d-inline">
+            <input type="hidden" asp-for="MaKm">
+            <button type="submit" class="btn btn-danger">Xác nhận xóa</button>
+        </form>
+    }
+    <a asp-action="Index" class="btn btn-light">Quay lại</a>
+</div>

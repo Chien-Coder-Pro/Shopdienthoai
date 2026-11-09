@@ -1,0 +1,110 @@
+@model Sanpham
+@{
+	ViewData["Title"] = Model.TenSp; var price = ShopRules.Price(Model, ShopRules.Now); var reviews = (List<Danhgium>)ViewBag.Reviews; var mine = ViewBag.MyReview as Danhgium;
+}
+<nav class="breadcrumb-small">
+	<a asp-action="Index">Trang chủ</a> / <a asp-action="Index" asp-route-brand="@Model.MaLsp">@Model.MaLspNavigation.TenLsp</a> / @Model.TenSp
+</nav>
+<section class="detail-grid">
+	<div class="detail-image">
+		<img src="@ShopRules.Image(Model.HinhAnh)" alt="@Model.TenSp">
+	</div>
+	<div class="detail-info">
+		<span class="eyebrow">@Model.MaLspNavigation.TenLsp</span>
+		<h1>@Model.TenSp</h1>
+		<p>
+			<span class="star">★</span> @Model.SoSao / 5 · @Model.SoDanhGia đánh giá
+		</p>
+		<div class="detail-price">@ShopRules.Money(price)</div>@if(price<Model.DonGia){
+		<p>
+			<del class="text-muted">@ShopRules.Money(Model.DonGia)</del> <span class="tag">Tiết kiệm @ShopRules.Money(Model.DonGia - price)</span>
+		</p>
+				}
+<div class="detail-specs">
+			<span>@Model.Ram RAM</span>
+			<span>@Model.Rom bộ nhớ</span>
+			<span>@Model.Pin pin</span>
+		</div>
+		<p class="stock mt-3">@(Model.SoLuong > 0 ? $"Có sẵn {Model.SoLuong} sản phẩm" : "Tạm hết hàng")</p>
+		<form asp-action="AddToCart" method="post" class="buy-form">
+			<input type="hidden" name="id" value="@Model.MaSp">
+			<label for="quantity">Số lượng</label>
+			<div class="d-flex gap-3">
+				<input id="quantity" name="quantity" type="number" value="1" min="1" max="@Math.Min(Model.SoLuong, 999)" class="form-control quantity">
+				<button class="btn btn-success btn-lg flex-fill" disabled="@(Model.SoLuong == 0)">Thêm vào giỏ hàng</button>
+			</div>
+		</form>
+		<div class="detail-callout">
+			Bạn cần tư vấn thêm? Gọi <a href="tel:0384229772">0384 229 772</a>
+			<br>
+			<small>ChienNguyenShop · Long Xuyên, An Giang</small>
+		</div>
+	</div>
+</section>
+<div class="row g-4 mt-2">
+	<section class="col-lg-7">
+		<div class="panel">
+			<h3>Thông số kỹ thuật</h3>
+			<table class="table spec-table">
+				<tbody>
+					@foreach (var row in new[] { ("Màn hình", Model.ManHinh), ("Hệ điều hành", Model.Hdh), ("Camera sau", Model.CamSau), ("Camera trước", Model.CamTruoc), ("CPU", Model.Cpu), ("RAM", Model.Ram), ("Bộ nhớ", Model.Rom), ("Thẻ nhớ", Model.Sdcard), ("Pin", Model.Pin) })
+					{
+						<tr>
+							<th>@row.Item1</th>
+							<td>@row.Item2</td>
+						</tr>
+					}
+				</tbody>
+			</table>
+		</div>
+	</section>
+	<section class="col-lg-5">
+		<div class="panel">
+			<h3>Khách hàng chia sẻ</h3>
+			@if (ViewBag.CanReview is true)
+			{
+				<form asp-action="Review" method="post" class="review-form">
+					<input type="hidden" name="id" value="@Model.MaSp">
+					<label for="stars">Đánh giá của bạn</label>
+					<select id="stars" name="stars" class="form-select mb-2">
+						@for (var n = 5; n >= 1; n--)
+						{
+							<option value="@n" selected="@(mine?.SoSao == n)">@n sao</option>
+						}
+					</select>
+	<textarea name="comment" class="form-control mb-2" maxlength="255" rows="3" required placeholder="Chia sẻ trải nghiệm của bạn...">@mine?.BinhLuan</textarea>
+					<button class="btn btn-success">@(mine == null ? "Gửi đánh giá" : "Cập nhật đánh giá")</button>
+				</form>
+			}
+			else
+			{
+				<p class="muted-note">Khách đã nhận hàng và hoàn tất thanh toán có thể đánh giá sản phẩm.</p>
+			}
+			@if (reviews.Count == 0)
+			{
+				<p class="text-muted">Chưa có đánh giá nào.</p>
+			}
+			@foreach (var r in reviews)
+			{
+				<div class="review-item">
+					<strong>@r.MaNdNavigation.Ho @r.MaNdNavigation.Ten</strong>
+					<span class="star ms-2">@r.SoSao ★</span>
+					<small>@r.NgayLap.ToString("dd/MM/yyyy")</small>
+					<p>@r.BinhLuan</p>
+				</div>
+			}
+		</div>
+	</section>
+</div>
+@if (((List<Sanpham>)ViewBag.Related).Count > 0)
+{
+	<div class="section-heading mt-5">
+		<h2>Có thể bạn cũng thích</h2>
+	</div>
+	<div class="product-grid">
+		@foreach (var p in (List<Sanpham>)ViewBag.Related)
+		{
+			<partial name="_ProductCard" model="p" />
+		}
+	</div>
+}

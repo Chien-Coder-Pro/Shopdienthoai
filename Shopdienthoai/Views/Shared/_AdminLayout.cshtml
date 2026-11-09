@@ -1,0 +1,65 @@
+@{
+	var current = ViewBag.CurrentUser as Nguoidung; var controller = ViewContext.RouteData.Values["controller"]?.ToString(); var action = ViewContext.RouteData.Values["action"]?.ToString();
+}
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>@ViewData["Title"] · Quản trị ChienNguyenShop</title>
+	<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css">
+	<link rel="stylesheet" href="~/css/site.css" asp-append-version="true">
+</head>
+<body class="admin-body">
+	<a class="skip-link" href="#main">Đến nội dung chính</a>
+	<aside class="admin-sidebar" id="adminSidebar">
+		<a class="admin-brand" asp-controller="Admin" asp-action="Index">
+			<img src="~/image/logo.png" alt="ChienNguyenShop">
+		</a>
+		<span class="sidebar-caption">KHÔNG GIAN QUẢN TRỊ</span>
+		<nav>
+			@foreach (var n in new[] { ("Admin", "Index", "Tổng quan"), ("Sanphams", "Index", "Sản phẩm"), ("Loaisanphams", "Index", "Hãng sản phẩm"), ("Khuyenmais", "Index", "Khuyến mãi"), ("Admin", "Orders", "Đơn hàng"), ("Admin", "Customers", "Khách hàng & nâng hạng"), ("Admin", "Users", "Người dùng & phân quyền"), ("Admin", "Ranks", "Chính sách thành viên"), ("Admin", "Reviews", "Đánh giá"), ("Admin", "Settings", "Tích hợp & email") })
+			{
+				<a class="@((controller==n.Item1 && (n.Item1!="Admin" || action==n.Item2))?"active":"")" asp-controller="@n.Item1" asp-action="@n.Item2">
+					<span class="nav-bullet">
+					</span>@n.Item3
+				</a>
+			}
+		</nav>
+		<div class="sidebar-bottom">
+			<a asp-controller="Customer" asp-action="Index">↗ Xem cửa hàng</a>
+			<small>Long Xuyên, An Giang</small>
+		</div>
+	</aside>
+	<div class="admin-workspace">
+		<header class="admin-topbar">
+			<button type="button" class="btn btn-light admin-menu-toggle" aria-controls="adminSidebar" aria-expanded="false">☰ Menu</button>
+			<div>
+				<span class="text-muted">Quản trị / </span>
+				<strong>@ViewData["Title"]</strong>
+			</div>
+			<div class="d-flex align-items-center gap-3">
+				<span class="d-none d-sm-inline">
+					Xin chào, <strong>@current?.Ten</strong>
+				</span>
+				<form asp-controller="Customer" asp-action="Signout" method="post">
+					<button class="btn btn-outline-success btn-sm">Đăng xuất</button>
+				</form>
+			</div>
+		</header>
+		<main class="admin-main" id="main">
+			<partial name="_Messages" />@RenderBody()
+		</main>
+	</div>
+	<script src="~/lib/jquery/dist/jquery.min.js">
+	</script>
+	<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js">
+	</script>
+	<script src="~/lib/jquery-validation/dist/jquery.validate.min.js">
+	</script>
+	<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js">
+	</script>
+	<script src="~/js/site.js" asp-append-version="true">
+	</script>@await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

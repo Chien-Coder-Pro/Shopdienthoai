@@ -1,0 +1,105 @@
+@model RegisterForm
+@{
+	ViewData["Title"] = "Đăng ký";
+}
+<section class="auth-shell">
+	<aside class="auth-visual">
+		<span class="eyebrow">CHIENNGUYENSHOP</span>
+		<h2>Một tài khoản.<br>Nhiều kết nối mới.</h2>
+		<p>Khám phá điện thoại phù hợp,<br>theo dõi đơn hàng và nhận ưu đãi thành viên.</p>
+		<div class="auth-logo-card">
+			<img src="/image/logo.png" alt="ChienNguyenShop">
+		</div>
+		<span class="auth-location">Long Xuyên, An Giang · 0384 229 772</span>
+	</aside>
+	<div class="auth-form">
+		<span class="eyebrow">BẮT ĐẦU KẾT NỐI</span>
+		<h1>Tạo tài khoản</h1>
+		<p class="text-muted">Cùng ChienNguyenShop khám phá điều bạn yêu.</p>
+		<form asp-action="Register" method="post">
+			<div asp-validation-summary="All" class="text-danger">
+			</div>
+			<div class="row g-3 mb-3">
+				<div class="col-sm-6">
+					<label asp-for="TaiKhoan">Tên tài khoản</label>
+					<input asp-for="TaiKhoan" class="form-control" autocomplete="username">
+					<span asp-validation-for="TaiKhoan" class="text-danger">
+					</span>
+				</div>
+				<div class="col-sm-6">
+					<label asp-for="Email">Email</label>
+					<input asp-for="Email" class="form-control" autocomplete="email">
+					<span asp-validation-for="Email" class="text-danger">
+					</span>
+				</div>
+			</div>
+			<div class="row g-3">
+				<div class="col-sm-6">
+					<label asp-for="Ho">Họ và tên đệm</label>
+					<input asp-for="Ho" class="form-control" autocomplete="family-name">
+					<span asp-validation-for="Ho" class="text-danger">
+					</span>
+				</div>
+				<div class="col-sm-6">
+					<label asp-for="Ten">Tên</label>
+					<input asp-for="Ten" class="form-control" autocomplete="given-name">
+					<span asp-validation-for="Ten" class="text-danger">
+					</span>
+				</div>
+				<div class="col-sm-6">
+					<label asp-for="Sdt">Số điện thoại</label>
+					<input asp-for="Sdt" class="form-control" autocomplete="tel">
+					<span asp-validation-for="Sdt" class="text-danger">
+					</span>
+				</div>
+				<div class="col-sm-6">
+					<label asp-for="GioiTinh">Giới tính</label>
+					<select asp-for="GioiTinh" class="form-select">
+						<option>Nam</option>
+						<option>Nữ</option>
+						<option>Khác</option>
+					</select>
+				</div>
+				<div class="col-12">
+					<label asp-for="DiaChi">Địa chỉ</label>
+<textarea asp-for="DiaChi" class="form-control" rows="2" autocomplete="street-address">
+</textarea>
+					<span asp-validation-for="DiaChi" class="text-danger">
+					</span>
+				</div>
+			</div>
+			<div class="row g-3 mt-1 mb-4">
+				<div class="col-sm-6">
+					<label asp-for="MatKhau">Mật khẩu</label>
+					<div class="password-wrap">
+						<input asp-for="MatKhau" class="form-control" autocomplete="new-password">
+						<button type="button" class="password-toggle">Hiện</button>
+					</div>
+					<span asp-validation-for="MatKhau" class="text-danger">
+					</span>
+					<small class="form-hint">Tối thiểu 8 ký tự</small>
+				</div>
+				<div class="col-sm-6">
+					<label asp-for="XacNhanMatKhau">Nhập lại mật khẩu</label>
+					<input asp-for="XacNhanMatKhau" class="form-control" autocomplete="new-password">
+					<span asp-validation-for="XacNhanMatKhau" class="text-danger">
+					</span>
+				</div>
+			</div>
+			<button class="btn btn-success w-100 py-3">Đăng ký tài khoản</button>
+		</form>
+		<div class="auth-divider">
+			<span>hoặc</span>
+		</div>
+		<form asp-action="Google" method="post">
+			<button class="btn-google w-100" disabled="@(!(ViewBag.GoogleEnabled is true))">
+				<span class="google-mark">G</span> Tiếp tục với Google
+			</button>
+		</form>@if(!(ViewBag.GoogleEnabled is true)){
+		<p class="form-hint text-center mt-2">Google sẽ khả dụng sau khi shop hoàn tất cấu hình.</p>
+				}
+<p class="auth-switch">
+			Đã có tài khoản? <a asp-action="Login">Đăng nhập</a>
+		</p>
+	</div>
+</section>

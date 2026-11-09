@@ -1,0 +1,38 @@
+@model Hoadon
+@{
+	ViewData["Title"] = "Đơn hàng #" + Model.MaHd;
+}
+<div class="section-heading">
+	<div>
+		<span class="eyebrow">CHIENNGUYENSHOP</span>
+		<h1>Đơn hàng #@Model.MaHd</h1>
+	</div>
+	<div class="d-flex gap-2 no-print">
+		<button class="btn btn-light" type="button" data-print>In đơn hàng</button>
+		<a class="btn btn-outline-success" asp-action="Orders">Tất cả đơn hàng</a>
+	</div>
+</div>
+<partial name="_OrderContent" model="Model" />
+<div class="panel mt-4 no-print">
+	<div class="d-flex flex-wrap gap-3">
+		@if (Model.PhuongThucTt == "MoMo" && Model.TrangThaiThanhToan != ShopRules.Paid && Model.TrangThai != "Đã hủy")
+		{
+			<form asp-controller="Payment" asp-action="Start" method="post">
+				<input name="id" type="hidden" value="@Model.MaHd">
+				<button class="btn btn-success" disabled="@(!(ViewBag.MomoEnabled is true))">Thanh toán MoMo Sandbox</button>
+			</form>
+			<form asp-controller="Payment" asp-action="Check" method="post">
+				<input name="id" type="hidden" value="@Model.MaHd">
+				<button class="btn btn-outline-success">Kiểm tra kết quả</button>
+			</form>
+}
+		@if (Model.TrangThai == "Chờ xử lý" && Model.TrangThaiThanhToan != ShopRules.Paid)
+		{
+			<form asp-action="CancelOrder" method="post" data-confirm="Bạn muốn hủy đơn hàng này?">
+				<input name="id" type="hidden" value="@Model.MaHd">
+				<button class="btn btn-outline-danger">Hủy đơn chờ xử lý</button>
+			</form>
+		}
+	</div>
+	<p class="muted-note mt-3 mb-0">Đơn đang chờ MoMo cần được đối soát trước khi hủy. Liên hệ 0384229772 nếu cần hỗ trợ.</p>
+</div>

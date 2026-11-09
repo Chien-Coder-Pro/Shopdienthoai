@@ -1,0 +1,42 @@
+@model Hoadon
+@{
+	ViewData["Title"] = "Đơn hàng #" + Model.MaHd; var next = Model.TrangThai switch { "Chờ xử lý" => new[] { "Đã xác nhận", "Đã hủy" }, "Đã xác nhận" => new[] { "Đang giao hàng", "Đã hủy" }, "Đang giao hàng" => new[] { "Đã giao hàng" }, _ => Array.Empty<string>() };
+}
+<div class="section-heading">
+	<h1>Đơn hàng #@Model.MaHd</h1>
+	<button type="button" data-print class="btn btn-outline-success no-print">In đơn hàng</button>
+</div>
+<partial name="_OrderContent" model="Model" />
+<div class="panel mt-4 no-print">
+	<h3>Xử lý đơn hàng</h3>
+	<div class="d-flex flex-wrap gap-3 align-items-end">
+		@if (next.Length > 0)
+		{
+			<form asp-action="UpdateOrder" method="post" class="d-flex flex-wrap gap-2" data-confirm="Xác nhận cập nhật trạng thái đơn hàng?">
+				<input type="hidden" name="id" value="@Model.MaHd">
+				<select name="status" class="form-select w-auto">
+					@foreach (var s in next)
+					{
+						<option>@s</option>
+					}
+				</select>
+				<button class="btn btn-success">Cập nhật đơn</button>
+			</form>
+		}
+		@if (Model.PhuongThucTt == "Trực tiếp" && Model.TrangThai != "Đã hủy" && Model.TrangThaiThanhToan != ShopRules.Paid)
+		{
+			<form asp-action="ConfirmPaid" method="post" data-confirm="Bạn đã thực sự thu đủ tiền của đơn hàng này?">
+				<input type="hidden" name="id" value="@Model.MaHd">
+				<button class="btn btn-outline-success">Xác nhận đã thu tiền trực tiếp</button>
+			</form>
+		}
+		@if (Model.PhuongThucTt == "MoMo")
+		{
+			<form asp-controller="Payment" asp-action="Check" method="post">
+				<input name="id" type="hidden" value="@Model.MaHd">
+				<button class="btn btn-outline-success">Đối soát với MoMo</button>
+			</form>
+		}
+	</div>
+	<p class="muted-note mt-3 mb-0">MoMo chỉ được ghi đã thanh toán khi kết quả từ MoMo được xác minh. Hủy đơn sẽ hoàn tồn một lần; đơn đã thanh toán cần xử lý riêng.</p>
+</div>

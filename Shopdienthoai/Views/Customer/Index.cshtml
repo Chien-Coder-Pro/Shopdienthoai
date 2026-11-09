@@ -1,0 +1,126 @@
+@model CatalogueViewModel
+@{
+	ViewData["Title"] = "Điện thoại dành cho bạn";
+}
+@if (string.IsNullOrEmpty(Model.Keyword) && !Model.Brand.HasValue && !Model.Min.HasValue && !Model.Max.HasValue && Model.Page == 1)
+{
+	<section class="hero">
+		<div class="hero-content">
+			<span class="eyebrow">CHIENNGUYENSHOP · SMART CHOICE</span>
+			<h1>
+				Công nghệ mới.<br>
+				<span>Kết nối gần hơn.</span>
+			</h1>
+			<p>Chiếc điện thoại hợp với bạn,<br>cho những điều bạn yêu mỗi ngày.</p>
+			<a href="#products" class="btn btn-success btn-lg rounded-pill px-4">
+				Khám phá ngay <span aria-hidden="true">↗</span>
+			</a>
+			<div class="hero-note">
+				<span class="mini-dot">
+				</span> Tư vấn cùng bạn · 0384 229 772
+			</div>
+		</div>
+		<div class="hero-art" aria-hidden="true">
+			<div class="hero-ring">
+			</div>
+			<img class="hero-phone phone-one" src="~/image/iphone-xr-64gb.jpg" alt="">
+			<img class="hero-phone phone-two" src="~/image/vivo-v11.jpg" alt="">
+			<div class="floating-note">
+				<span class="star">★</span> Chọn theo cách của bạn
+			</div>
+		</div>
+	</section>
+	<div class="benefits">
+		<div>
+			<span class="benefit-number">01</span>
+			<div>
+				<strong>Dễ chọn, dễ mua</strong>
+				<small>Tìm theo hãng và ngân sách</small>
+			</div>
+		</div>
+		<div>
+			<span class="benefit-number">02</span>
+			<div>
+				<strong>Ưu đãi thành viên</strong>
+				<small>@ViewBag.MemberOffer theo chính sách hiện tại</small>
+			</div>
+		</div>
+		<div>
+			<span class="benefit-number">03</span>
+			<div>
+				<strong>Luôn sẵn sàng hỗ trợ</strong>
+				<small>Kết nối trực tiếp với shop</small>
+			</div>
+		</div>
+	</div>
+}
+<section id="products">
+	<div class="section-heading">
+		<div>
+			<span class="eyebrow">KHÁM PHÁ BỘ SƯU TẬP</span>
+			<h2>
+				Điện thoại dành cho bạn<span class="text-green">.</span>
+			</h2>
+		</div>
+		<span class="text-muted">@Model.Total sản phẩm phù hợp</span>
+	</div>
+	<form method="get" class="filter-bar">
+		<input type="hidden" name="keyword" value="@Model.Keyword">
+		<div>
+			<label for="brand">Thương hiệu</label>
+			<select name="brand" id="brand" class="form-select">
+				<option value="">Tất cả hãng</option>@foreach(var b in (List<Loaisanpham>)ViewBag.Brands){
+				<option value="@b.MaLsp" selected="@(Model.Brand == b.MaLsp)">@b.TenLsp</option>
+								}
+			</select>
+		</div>
+		<div>
+			<label for="min">Giá từ</label>
+			<input name="min" id="min" type="number" min="0" value="@Model.Min" placeholder="0đ" class="form-control">
+		</div>
+		<div>
+			<label for="max">Đến</label>
+			<input name="max" id="max" type="number" min="0" value="@Model.Max" placeholder="Không giới hạn" class="form-control">
+		</div>
+		<div>
+			<label for="sort">Sắp xếp</label>
+			<select id="sort" name="sort" class="form-select">
+				<option value="new" selected="@(Model.Sort == "new")">Mới nhất</option>
+				<option value="price-asc" selected="@(Model.Sort == "price-asc")">Giá tăng dần</option>
+				<option value="price-desc" selected="@(Model.Sort == "price-desc")">Giá giảm dần</option>
+				<option value="rating" selected="@(Model.Sort == "rating")">Đánh giá cao</option>
+			</select>
+		</div>
+		<button class="btn btn-success">Áp dụng</button>
+		<a asp-action="Index" class="filter-reset">Đặt lại</a>
+	</form>
+	@if (!string.IsNullOrEmpty(Model.Keyword))
+	{
+		<p>
+			Kết quả tìm kiếm cho <strong>“@Model.Keyword”</strong>
+		</p>
+	}
+	<div class="product-grid">
+		@foreach (var p in Model.Items)
+		{
+			<partial name="_ProductCard" model="p" />
+		}
+	</div>
+	@if (Model.Total == 0)
+	{
+		<div class="empty-state">
+			<h3>Chưa tìm thấy sản phẩm</h3>
+			<p>Thử đổi từ khóa hoặc mở rộng khoảng giá nhé.</p>
+			<a class="btn btn-success" asp-action="Index">Xem tất cả điện thoại</a>
+		</div>
+	}
+	@if (Model.Pages > 1)
+	{
+		<nav class="pagination-shop" aria-label="Phân trang">
+			@for (var i = 1; i <= Model.Pages; i++)
+			{
+				<a class="@(i == Model.Page ? "current" : "")" asp-action="Index" asp-route-keyword="@Model.Keyword" asp-route-brand="@Model.Brand" asp-route-min="@Model.Min" asp-route-max="@Model.Max" asp-route-sort="@Model.Sort" asp-route-page="@i">@i</a>
+			}
+		</nav>
+	}
+</section>

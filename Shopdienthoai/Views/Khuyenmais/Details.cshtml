@@ -1,0 +1,21 @@
+@model Khuyenmai
+@{
+    ViewData["Title"] = "Chi tiết khuyến mãi";
+}
+<div class="panel narrow-panel">
+    <h1>@Model.TenKm</h1>
+    <dl class="row mt-4">
+        <dt class="col-sm-4">Mã khuyến mãi</dt>
+        <dd class="col-sm-8">@Model.MaKm</dd>
+        <dt class="col-sm-4">Loại khuyến mãi</dt>
+        <dd class="col-sm-8">@Model.LoaiKm</dd>
+        <dt class="col-sm-4">Số tiền giảm</dt>
+        <dd class="col-sm-8">@ShopRules.Money(Model.GiaTriKm)</dd>
+        <dt class="col-sm-4">Bắt đầu</dt>
+        <dd class="col-sm-8">@Model.NgayBd.ToString("dd/MM/yyyy HH:mm")</dd>
+        <dt class="col-sm-4">Kết thúc</dt>
+        <dd class="col-sm-8">@Model.NgayKt.ToString("dd/MM/yyyy HH:mm")</dd>
+    </dl>
+    <a asp-action="Edit" asp-route-id="@Model.MaKm" class="btn btn-success">Chỉnh sửa</a>
+    <a asp-action="Index" class="btn btn-light">Quay lại</a>
+</div>

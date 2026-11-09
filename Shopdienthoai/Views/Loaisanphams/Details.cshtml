@@ -1,0 +1,16 @@
+@model Loaisanpham
+@{
+    ViewData["Title"] = "Chi tiết hãng sản phẩm";
+}
+<div class="panel narrow-panel">
+    <h1>@Model.TenLsp</h1>
+    <img class="upload-preview" src="@ShopRules.Image(Model.HinhAnh)" alt="@Model.TenLsp">
+    <dl class="row mt-3">
+        <dt class="col-sm-3">Mã hãng</dt>
+        <dd class="col-sm-9">@Model.MaLsp</dd>
+        <dt class="col-sm-3">Mô tả</dt>
+        <dd class="col-sm-9">@Model.Mota</dd>
+    </dl>
+    <a asp-action="Edit" asp-route-id="@Model.MaLsp" class="btn btn-success">Chỉnh sửa</a>
+    <a asp-action="Index" class="btn btn-light">Quay lại</a>
+</div>

@@ -1,0 +1,41 @@
+@model List<Danhgium>
+@{
+	ViewData["Title"] = "Đánh giá khách hàng";
+}
+<div class="section-heading">
+	<h1>Đánh giá khách hàng</h1>
+	<span>@Model.Count nhận xét</span>
+</div>
+<div class="panel table-responsive">
+	<table class="table align-middle">
+		<thead>
+			<tr>
+				<th>Sản phẩm</th>
+				<th>Khách hàng</th>
+				<th>Điểm</th>
+				<th>Nội dung</th>
+				<th>Ngày</th>
+				<th>
+				</th>
+			</tr>
+		</thead>
+		<tbody>
+			@foreach (var r in Model)
+			{
+				<tr>
+					<td>@r.MaSpNavigation.TenSp</td>
+					<td>@r.MaNdNavigation.Ho @r.MaNdNavigation.Ten</td>
+					<td class="star">@r.SoSao ★</td>
+					<td class="review-text">@r.BinhLuan</td>
+					<td>@r.NgayLap.ToString("dd/MM/yyyy")</td>
+					<td>
+						<form asp-action="DeleteReview" method="post" data-confirm="Xóa nhận xét này?">
+							<input type="hidden" name="id" value="@r.MaDg">
+							<button class="btn btn-outline-danger btn-sm">Xóa</button>
+						</form>
+					</td>
+				</tr>
+			}
+		</tbody>
+	</table>
+</div>

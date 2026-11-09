@@ -1,0 +1,33 @@
+@model Khuyenmai
+@{
+    ViewData["Title"] = "Thêm khuyến mãi";
+}
+<div class="panel narrow-panel">
+    <h1>@ViewData["Title"]</h1>
+    <form asp-action="Create" method="post">
+        <input asp-for="MaKm" type="hidden">
+        <div asp-validation-summary="All" class="text-danger"></div>
+        <div class="mb-3">
+            <label asp-for="TenKm">Tên chương trình</label>
+            <input asp-for="TenKm" class="form-control">
+        </div>
+        <div class="mb-3">
+            <label asp-for="LoaiKm">Loại khuyến mãi</label>
+            <select asp-for="LoaiKm" class="form-select" asp-items="ViewBag.LoaiKm"></select>
+        </div>
+        <div class="mb-3">
+            <label asp-for="GiaTriKm">Số tiền giảm (đ)</label>
+            <input asp-for="GiaTriKm" type="number" min="0" step="1" class="form-control">
+            <small class="form-hint">Chỉ dùng cho Giảm giá/Giá rẻ online. Các nhãn khác tự đặt về 0.</small>
+        </div>
+        <div class="mb-3">
+            <label asp-for="NgayBd">Bắt đầu</label>
+            <input asp-for="NgayBd" type="datetime-local" class="form-control">
+        </div>
+        <div class="mb-4">
+            <label asp-for="NgayKt">Kết thúc</label>
+            <input asp-for="NgayKt" type="datetime-local" class="form-control">
+        </div>
+        <button class="btn btn-success">Lưu khuyến mãi</button> <a asp-action="Index" class="btn btn-light">Quay lại</a>
+    </form>
+</div>

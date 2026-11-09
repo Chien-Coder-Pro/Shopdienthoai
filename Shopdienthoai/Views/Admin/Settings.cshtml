@@ -1,0 +1,74 @@
+@model List<Emailhangdoi>
+@inject IConfiguration Config
+@{
+	ViewData["Title"] = "Tích hợp & email";
+}
+<div class="section-heading">
+	<div>
+		<h1>Tích hợp & email</h1>
+		<p class="text-muted">Khóa dịch vụ được cấu hình trên máy chủ, không hiển thị trên trang quản trị.</p>
+	</div>
+</div>
+<div class="stats-grid integrations-grid">
+	<div class="stat-card">
+		<span>Google</span>
+		<strong class="integration-state">@(ViewBag.GoogleEnabled is true ? "Đã cấu hình" : "Chưa cấu hình")</strong>
+		<small>Đăng nhập và đăng ký bằng Google</small>
+	</div>
+	<div class="stat-card">
+		<span>MoMo Sandbox</span>
+		<strong class="integration-state">@(ViewBag.MomoEnabled is true ? "Đã cấu hình" : "Chưa cấu hình")</strong>
+		<small>Không xử lý thanh toán thật</small>
+	</div>
+	<div class="stat-card">
+		<span>Gửi email SMTP</span>
+		<strong class="integration-state">@(Config.GetValue<bool>("Email:Enabled") ? "Đã bật" : "Chưa bật")</strong>
+		<small>Cấu hình theo HUONG_DAN.md</small>
+	</div>
+</div>
+<div class="panel mt-4">
+	<h3>Hàng đợi email gần đây</h3>
+	<p class="text-muted">Gửi một lần sau khi đăng ký Google và sau khi đặt đơn. Khi SMTP chưa bật, thư được giữ lại. Tự thử tối đa 5 lần khi gặp lỗi; các thư có thể được gửi lại nếu mất kết nối ngay sau khi SMTP tiếp nhận.</p>
+	<div class="table-responsive">
+		<table class="table align-middle">
+			<thead>
+				<tr>
+					<th>Người nhận</th>
+					<th>Tiêu đề</th>
+					<th>Trạng thái</th>
+					<th>Số lần thử</th>
+					<th>Thao tác</th>
+				</tr>
+			</thead>
+			<tbody>
+				@foreach (var e in Model)
+				{
+					<tr>
+						<td>@e.NguoiNhan</td>
+						<td>@e.TieuDe</td>
+						<td>
+							@if (e.DaGuiLuc != null)
+							{
+								<span class="text-green">Đã gửi @e.DaGuiLuc.Value.ToString("dd/MM HH:mm")</span>
+							}
+							else
+							{
+								<span class="text-muted">@(e.LoiGanNhat ?? "Đang chờ")</span>
+							}
+						</td>
+						<td>@e.SoLanThu</td>
+						<td>
+							@if (e.DaGuiLuc == null)
+							{
+								<form asp-action="RetryEmail" method="post">
+									<input type="hidden" name="id" value="@e.MaEmail">
+									<button class="btn btn-outline-success btn-sm">Đưa về hàng đợi</button>
+								</form>
+							}
+						</td>
+					</tr>
+				}
+			</tbody>
+		</table>
+	</div>
+</div>

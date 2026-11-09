@@ -1,0 +1,28 @@
+@model Nguoidung
+@{
+	ViewData["Title"] = "Quản lý người dùng";
+}
+<div class="panel narrow-panel">
+	<h1>@Model.Ho @Model.Ten</h1>
+	<p>@Model.Email · @Model.Sdt</p>
+	<p class="text-muted">@Model.DiaChi</p>
+	<form asp-action="EditUser" method="post">
+		<input name="id" type="hidden" value="@Model.MaNd">
+		<div class="mb-3">
+			<label for="role">Quyền truy cập</label>
+			<select id="role" name="role" class="form-select" asp-items="ViewBag.Roles"></select>
+		</div>
+		<div class="mb-3">
+			<label for="rank">Hạng khách hàng</label>
+			<select id="rank" name="rank" class="form-select" asp-items="ViewBag.Ranks"></select>
+		</div>
+		<div class="mb-4">
+			<label for="state">Trạng thái</label>
+			<select id="state" name="state" class="form-select">
+				<option value="1" selected="@(Model.TrangThai == 1)">Hoạt động</option>
+				<option value="0" selected="@(Model.TrangThai == 0)">Khóa tài khoản</option>
+			</select>
+		</div>
+		<button class="btn btn-success">Lưu thay đổi</button> <a asp-action="Users" class="btn btn-light">Quay lại</a>
+	</form>
+</div>

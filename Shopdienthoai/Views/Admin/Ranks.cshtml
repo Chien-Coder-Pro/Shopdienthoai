@@ -1,0 +1,34 @@
+@model List<Hangkhachhang>
+@{
+	ViewData["Title"] = "Chính sách thành viên";
+}
+<div class="section-heading">
+	<div>
+		<h1>Chính sách thành viên</h1>
+		<p class="text-muted">Điều chỉnh ngưỡng chi tiêu và tỷ lệ ưu đãi. Hóa đơn đã đặt giữ nguyên giá trị đã chốt.</p>
+	</div>
+</div>
+<div class="row g-4">
+	@foreach (var r in Model)
+	{
+		<div class="col-lg-4">
+			<div class="panel h-100">
+				<span class="eyebrow">HẠNG THÀNH VIÊN</span>
+				<h2>@r.TenHang</h2>
+				<p class="text-muted">@r.MoTa</p>
+				<form asp-action="SaveRank" method="post">
+					<input name="id" type="hidden" value="@r.MaHang">
+					<div class="mb-3">
+						<label for="threshold-@r.MaHang">Chi tiêu tích lũy tối thiểu (đ)</label>
+						<input id="threshold-@r.MaHang" name="threshold" type="number" min="0" step="1" class="form-control" value="@r.NguongChiTieu.ToString("0", System.Globalization.CultureInfo.InvariantCulture)">
+					</div>
+					<div class="mb-4">
+						<label for="discount-@r.MaHang">Giảm giá (%)</label>
+						<input id="discount-@r.MaHang" name="discount" type="number" min="0" max="100" step="0.01" class="form-control" value="@r.PhanTramGiam.ToString(System.Globalization.CultureInfo.InvariantCulture)">
+					</div>
+					<button class="btn btn-success w-100">Cập nhật @r.TenHang</button>
+				</form>
+			</div>
+		</div>
+	}
+</div>

@@ -1,0 +1,68 @@
+@model List<UpgradeRow>
+@{
+	ViewData["Title"] = "Khách hàng & nâng hạng";
+}
+<div class="section-heading">
+	<div>
+		<h1>Khách hàng & nâng hạng</h1>
+		<p class="text-muted">Chi tiêu hợp lệ = tổng thanh toán của đơn đã giao và đã thanh toán.</p>
+	</div>
+	<a asp-action="Ranks" class="btn btn-outline-success">Chỉnh chính sách</a>
+</div>
+<form class="filter-bar" method="get">
+	<input name="keyword" value="@ViewBag.Keyword" class="form-control" placeholder="Tìm tên, tài khoản, email">
+	<label class="text-nowrap mb-0">
+		<input type="checkbox" name="eligible" value="true" checked="@(ViewBag.Eligible is true)"> Chỉ khách đủ điều kiện
+	</label>
+	<button class="btn btn-success">Lọc danh sách</button>
+</form>
+<div class="panel table-responsive">
+	<table class="table align-middle">
+		<thead>
+			<tr>
+				<th>Khách hàng</th>
+				<th>Hạng hiện tại</th>
+				<th>Chi tiêu hợp lệ</th>
+				<th>Đề xuất</th>
+				<th>Thao tác</th>
+			</tr>
+		</thead>
+		<tbody>
+			@foreach (var r in Model)
+			{
+				<tr>
+					<td>
+						<strong>@r.Customer.Ho @r.Customer.Ten</strong>
+						<small class="d-block text-muted">@r.Customer.Email</small>
+					</td>
+					<td>
+						<span class="tag">@r.Customer.MaHangNavigation.TenHang</span>
+					</td>
+					<td>@ShopRules.Money(r.ChiTieu)</td>
+					<td>
+						@if (r.DeXuat != null)
+						{
+							<strong class="text-green">Nâng lên @r.DeXuat.TenHang</strong>
+						}
+						else
+						{
+							<span class="text-muted">Chưa có đề xuất mới</span>
+						}
+					</td>
+					<td>
+						@if (r.DeXuat != null)
+						{
+							<form asp-action="ApproveUpgrade" method="post" data-confirm="Duyệt nâng hạng khách hàng này?">
+								<input name="id" type="hidden" value="@r.Customer.MaNd">
+								<button class="btn btn-success btn-sm">Duyệt nâng hạng</button>
+							</form>
+						}
+	<a asp-action="EditUser" asp-route-id="@r.Customer.MaNd" class="btn btn-link btn-sm">Quản lý</a>
+					</td>
+				</tr>
+			}
+		</tbody>
+	</table>@if(Model.Count==0){
+	<p class="text-muted">Chưa có khách hàng phù hợp.</p>
+		}
+</div>

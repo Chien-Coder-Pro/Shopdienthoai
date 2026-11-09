@@ -1,0 +1,20 @@
+@model Sanpham
+@{
+    ViewData["Title"] = "Ngừng bán sản phẩm";
+}
+<div class="panel narrow-panel">
+    <h1>Ngừng bán sản phẩm?</h1>
+    <p>Sản phẩm sẽ được ẩn khỏi cửa hàng. Các hóa đơn và đánh giá đã có vẫn được giữ lại.</p>
+    <div class="table-product mb-4">
+        <img src="@ShopRules.Image(Model.HinhAnh)" alt="@Model.TenSp">
+        <div>
+            <strong>@Model.TenSp</strong>
+            <p class="text-muted mb-0">@Model.MaLspNavigation.TenLsp · @ShopRules.Money(Model.DonGia)</p>
+        </div>
+    </div>
+    <form asp-action="Delete" asp-route-id="@Model.MaSp" method="post">
+        <input type="hidden" asp-for="MaSp">
+        <button type="submit" class="btn btn-danger">Xác nhận ngừng bán</button>
+        <a asp-action="Index" class="btn btn-light">Quay lại</a>
+    </form>
+</div>

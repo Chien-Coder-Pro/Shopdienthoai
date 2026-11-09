@@ -1,0 +1,47 @@
+@model List<Nguoidung>
+@{
+	ViewData["Title"] = "Người dùng & phân quyền";
+}
+<div class="section-heading">
+	<h1>Người dùng & phân quyền</h1>
+</div>
+<form method="get" class="filter-bar">
+	<input class="form-control" name="keyword" value="@ViewBag.Keyword" placeholder="Tìm tài khoản hoặc email">
+	<button class="btn btn-success">Tìm kiếm</button>
+</form>
+<div class="panel table-responsive">
+	<table class="table align-middle">
+		<thead>
+			<tr>
+				<th>Tài khoản</th>
+				<th>Họ tên</th>
+				<th>Email / điện thoại</th>
+				<th>Quyền</th>
+				<th>Hạng</th>
+				<th>Trạng thái</th>
+				<th>
+				</th>
+			</tr>
+		</thead>
+		<tbody>
+			@foreach (var u in Model)
+			{
+				<tr>
+					<td>@(u.GoogleId != null && u.TaiKhoan.StartsWith("google_") ? "Google" : u.TaiKhoan)</td>
+					<td>@u.Ho @u.Ten</td>
+					<td>
+						@u.Email<small class="d-block text-muted">@u.Sdt</small>
+					</td>
+					<td>@u.MaQuyenNavigation.TenQuyen</td>
+					<td>@u.MaHangNavigation.TenHang</td>
+					<td>
+						<span class="status-badge @(u.TrangThai == 1 ? "status-paid" : "status-cancel")">@(u.TrangThai == 1 ? "Hoạt động" : "Đã khóa")</span>
+					</td>
+					<td>
+						<a asp-action="EditUser" asp-route-id="@u.MaNd" class="btn btn-outline-success btn-sm">Chỉnh sửa</a>
+					</td>
+				</tr>
+			}
+		</tbody>
+	</table>
+</div>

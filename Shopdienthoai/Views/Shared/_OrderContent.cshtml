@@ -1,0 +1,106 @@
+@model Hoadon
+<div class="row g-4">
+	<div class="col-lg-8">
+		<div class="panel">
+			<div class="d-flex justify-content-between gap-2 flex-wrap">
+				<h3>Chi tiết sản phẩm</h3>
+				<span>@Model.NgayLap.ToString("dd/MM/yyyy HH:mm")</span>
+			</div>
+			<div class="table-responsive">
+				<table class="table align-middle">
+					<thead>
+						<tr>
+							<th>Sản phẩm</th>
+							<th>Đơn giá đã chốt</th>
+							<th>SL</th>
+							<th>Thành tiền</th>
+						</tr>
+					</thead>
+					<tbody>
+						@foreach (var l in Model.Chitiethoadons)
+						{
+							<tr>
+								<td>
+									<div class="table-product">
+										<img src="@ShopRules.Image(l.MaSpNavigation.HinhAnh)" alt="">
+										<span>@l.MaSpNavigation.TenSp</span>
+									</div>
+								</td>
+								<td>@ShopRules.Money(l.DonGia)</td>
+								<td>@l.SoLuong</td>
+								<td>@ShopRules.Money(l.ThanhTien)</td>
+							</tr>
+						}
+					</tbody>
+				</table>
+			</div>
+			<div class="order-totals">
+				<div class="summary-line">
+					<span>Tiền hàng</span>
+					<strong>@ShopRules.Money(Model.TongTien)</strong>
+				</div>
+				<div class="summary-line">
+					<span>Ưu đãi đã chốt (@Model.PhanTramGiam%)</span>
+					<strong>−@ShopRules.Money(Model.TienGiam)</strong>
+				</div>
+				<div class="summary-line summary-total">
+					<span>Tổng thanh toán</span>
+					<strong>@ShopRules.Money(Model.TongThanhToan)</strong>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="col-lg-4">
+		<div class="panel">
+			<h3>Thông tin nhận hàng</h3>
+			<strong>@Model.NguoiNhan</strong>
+			<p>@Model.Sdt<br>@Model.DiaChi</p>
+			<hr>
+			<p>
+				Phương thức<br>
+				<strong>@(Model.PhuongThucTt == "MoMo" ? "MoMo Sandbox" : Model.PhuongThucTt)</strong>
+			</p>
+			<p>
+				Thanh toán<br>
+				<span class="status-badge @(Model.TrangThaiThanhToan == ShopRules.Paid ? "status-paid" : "status-wait")">@Model.TrangThaiThanhToan</span>
+			</p>
+			<p class="mb-0">
+				Đơn hàng<br>
+				<span class="status-badge @(Model.TrangThai == "Đã hủy" ? "status-cancel" : "status-wait")">@Model.TrangThai</span>
+			</p>
+		</div>
+	</div>
+</div>
+@if (ViewBag.Payments is List<Giaodichthanhtoan> payments && payments.Count > 0)
+{
+	<div class="panel mt-4">
+		<h3>Giao dịch MoMo</h3>
+		<div class="table-responsive">
+			<table class="table">
+				<thead>
+					<tr>
+						<th>Mã yêu cầu thanh toán</th>
+						<th>Số tiền</th>
+						<th>Trạng thái</th>
+						<th>Mã MoMo</th>
+						<th>Ngày tạo</th>
+					</tr>
+				</thead>
+				<tbody>
+					@foreach (var g in payments)
+					{
+						<tr>
+							<td>
+								<small>@g.OrderId</small>
+							</td>
+							<td>@ShopRules.Money(g.SoTien)</td>
+							<td>@g.TrangThai</td>
+							<td>@(g.TransId ?? "—")</td>
+							<td>@g.NgayTao.ToString("dd/MM/yyyy HH:mm")</td>
+						</tr>
+					}
+				</tbody>
+			</table>
+		</div>
+	</div>
+}

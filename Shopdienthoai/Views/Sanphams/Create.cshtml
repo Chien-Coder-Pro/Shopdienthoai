@@ -1,0 +1,108 @@
+@model Sanpham
+@{
+    ViewData["Title"] = "Thêm sản phẩm";
+}
+<div class="section-heading">
+    <h1>@ViewData["Title"]</h1>
+    <a asp-action="Index" class="btn btn-light">Quay lại danh sách</a>
+</div>
+<form asp-action="Create" method="post" enctype="multipart/form-data">
+    <input asp-for="MaSp" type="hidden">
+    <div asp-validation-summary="All" class="text-danger"></div>
+    <div class="row g-4">
+        <div class="col-lg-8">
+            <div class="panel">
+                <h3>Thông tin sản phẩm</h3>
+                <div class="row g-3">
+                    <div class="col-12">
+                        <label asp-for="TenSp">Tên điện thoại</label>
+                        <input asp-for="TenSp" class="form-control">
+                        <span asp-validation-for="TenSp" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="MaLsp">Hãng sản phẩm</label>
+                        <select asp-for="MaLsp" class="form-select" asp-items="ViewBag.MaLsp"></select>
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="MaKm">Khuyến mãi</label>
+                        <select asp-for="MaKm" class="form-select" asp-items="ViewBag.MaKm"></select>
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="DonGia">Giá niêm yết (đ)</label>
+                        <input asp-for="DonGia" type="number" min="0" step="1" class="form-control">
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="SoLuong">Số lượng tồn</label>
+                        <input asp-for="SoLuong" type="number" min="0" class="form-control">
+                    </div>
+                    <div class="col-12">
+                        <label asp-for="TrangThai">Trạng thái</label>
+                        <select asp-for="TrangThai" class="form-select">
+                            <option value="1">Đang bán</option>
+                            <option value="0">Ngừng bán</option>
+                        </select>
+                    </div>
+                </div>
+                <h3 class="mt-4">Thông số kỹ thuật</h3>
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label asp-for="ManHinh">Màn hình</label>
+                        <input asp-for="ManHinh" class="form-control" maxlength="50">
+                        <span asp-validation-for="ManHinh" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="Hdh">Hệ điều hành</label>
+                        <input asp-for="Hdh" class="form-control" maxlength="50">
+                        <span asp-validation-for="Hdh" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="CamSau">Camera sau</label>
+                        <input asp-for="CamSau" class="form-control" maxlength="50">
+                        <span asp-validation-for="CamSau" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="CamTruoc">Camera trước</label>
+                        <input asp-for="CamTruoc" class="form-control" maxlength="50">
+                        <span asp-validation-for="CamTruoc" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="Cpu">CPU</label>
+                        <input asp-for="Cpu" class="form-control" maxlength="50">
+                        <span asp-validation-for="Cpu" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="Ram">RAM</label>
+                        <input asp-for="Ram" class="form-control" maxlength="50">
+                        <span asp-validation-for="Ram" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="Rom">Bộ nhớ trong</label>
+                        <input asp-for="Rom" class="form-control" maxlength="50">
+                        <span asp-validation-for="Rom" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="Sdcard">Thẻ nhớ</label>
+                        <input asp-for="Sdcard" class="form-control" maxlength="50">
+                        <span asp-validation-for="Sdcard" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="Pin">Pin</label>
+                        <input asp-for="Pin" class="form-control" maxlength="50">
+                        <span asp-validation-for="Pin" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="panel">
+                <h3>Ảnh sản phẩm</h3>
+                <img id="imagePreview" class="upload-preview" src="@ShopRules.Image(Model.HinhAnh)" alt="Ảnh xem trước">
+                <label for="upload">Chọn ảnh mới</label>
+                <input id="upload" name="upload" type="file" accept="image/jpeg,image/png,image/webp" class="form-control" data-image-preview="imagePreview">
+                <span asp-validation-for="HinhAnh" class="text-danger"></span>
+                <p class="form-hint mt-2">JPG, PNG hoặc WebP · tối đa 5MB. Vui lòng chọn ảnh sản phẩm.</p>
+                <button class="btn btn-success w-100 py-3 mt-3">Thêm sản phẩm</button>
+            </div>
+        </div>
+    </div>
+</form>

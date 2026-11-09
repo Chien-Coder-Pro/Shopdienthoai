@@ -1,0 +1,56 @@
+﻿-- ChienNguyenShop: chạy trên database đã tạo bằng file SQL gốc.
+-- Không DROP database, không xóa dữ liệu hiện có.
+USE shopdienthoai;
+GO
+SET XACT_ABORT ON;
+BEGIN TRANSACTION;
+IF COL_LENGTH('NGUOIDUNG','GoogleId') IS NULL ALTER TABLE NGUOIDUNG ADD GoogleId varchar(100) NULL;
+IF COL_LENGTH('NGUOIDUNG','CoMatKhau') IS NULL ALTER TABLE NGUOIDUNG ADD CoMatKhau bit NOT NULL CONSTRAINT DF_ND_CoMatKhau DEFAULT 1;
+IF COL_LENGTH('HOADON','TrangThaiThanhToan') IS NULL
+BEGIN
+    ALTER TABLE HOADON ADD TrangThaiThanhToan nvarchar(30) NOT NULL CONSTRAINT DF_HD_TTTT DEFAULT N'Chưa thanh toán';
+END;
+IF COL_LENGTH('HOADON','MaDatHang') IS NULL ALTER TABLE HOADON ADD MaDatHang varchar(36) NULL;
+IF COL_LENGTH('HANGKHACHHANG','NguongChiTieu') IS NULL ALTER TABLE HANGKHACHHANG ADD NguongChiTieu decimal(18,2) NOT NULL CONSTRAINT DF_HANG_Nguong DEFAULT 0;
+COMMIT;
+GO
+-- Chỉ khởi tạo ngưỡng cho lần đầu. Những lần chạy sau giữ ngưỡng Admin đã sửa.
+IF NOT EXISTS (SELECT 1 FROM HANGKHACHHANG WHERE NguongChiTieu > 0)
+BEGIN
+    UPDATE HANGKHACHHANG SET NguongChiTieu=CASE TenHang WHEN N'VIP' THEN 20000000 WHEN N'VVIP' THEN 50000000 ELSE 0 END;
+END;
+GO
+IF NOT EXISTS(SELECT 1 FROM sys.indexes WHERE name='UX_ND_TaiKhoan' AND object_id=OBJECT_ID('NGUOIDUNG')) CREATE UNIQUE INDEX UX_ND_TaiKhoan ON NGUOIDUNG(TaiKhoan);
+IF NOT EXISTS(SELECT 1 FROM sys.indexes WHERE name='UX_ND_Email' AND object_id=OBJECT_ID('NGUOIDUNG')) CREATE UNIQUE INDEX UX_ND_Email ON NGUOIDUNG(Email);
+IF NOT EXISTS(SELECT 1 FROM sys.indexes WHERE name='UX_ND_GoogleId' AND object_id=OBJECT_ID('NGUOIDUNG')) CREATE UNIQUE INDEX UX_ND_GoogleId ON NGUOIDUNG(GoogleId) WHERE GoogleId IS NOT NULL;
+IF NOT EXISTS(SELECT 1 FROM sys.indexes WHERE name='UX_HD_MaDatHang' AND object_id=OBJECT_ID('HOADON')) CREATE UNIQUE INDEX UX_HD_MaDatHang ON HOADON(MaDatHang) WHERE MaDatHang IS NOT NULL;
+GO
+IF OBJECT_ID('GIAODICHTHANHTOAN') IS NULL
+CREATE TABLE GIAODICHTHANHTOAN(
+    MaGd int IDENTITY PRIMARY KEY,
+    MaHd int NOT NULL REFERENCES HOADON(MaHD),
+    OrderId varchar(100) NOT NULL UNIQUE,
+    RequestId varchar(100) NOT NULL UNIQUE,
+    SoTien decimal(18,2) NOT NULL CHECK(SoTien>=0),
+    TrangThai nvarchar(30) NOT NULL,
+    TransId varchar(100) NULL,
+    ResultCode int NULL,
+    NgayTao datetime2 NOT NULL,
+    NgayCapNhat datetime2 NULL,
+    PayUrl nvarchar(500) NULL
+);
+IF NOT EXISTS(SELECT 1 FROM sys.indexes WHERE name='IX_GD_MaHd' AND object_id=OBJECT_ID('GIAODICHTHANHTOAN'))CREATE INDEX IX_GD_MaHd ON GIAODICHTHANHTOAN(MaHd);
+IF OBJECT_ID('EMAILHANGDOI') IS NULL
+CREATE TABLE EMAILHANGDOI(
+    MaEmail int IDENTITY PRIMARY KEY,
+    Khoa nvarchar(100) NOT NULL UNIQUE,
+    NguoiNhan nvarchar(100) NOT NULL,
+    TieuDe nvarchar(200) NOT NULL,
+    NoiDung nvarchar(max) NOT NULL,
+    SoLanThu int NOT NULL DEFAULT 0,
+    NgayTao datetime2 NOT NULL,
+    DaGuiLuc datetime2 NULL,
+    ThuTiepLuc datetime2 NULL,
+    LoiGanNhat nvarchar(200) NULL
+);
+GO

@@ -1,0 +1,46 @@
+@model List<Khuyenmai>
+@{
+    ViewData["Title"] = "Khuyến mãi";
+}
+<div class="section-heading">
+    <h1>Khuyến mãi sản phẩm</h1>
+    <a asp-action="Create" class="btn btn-success">+ Thêm khuyến mãi</a>
+</div>
+<p class="muted-note">Giảm giá và Giá rẻ online trừ số tiền cố định trong thời gian hiệu lực. Trả góp và Mới ra mắt chỉ là nhãn; không có luồng vay trả góp.</p>
+<div class="panel table-responsive">
+    <table class="table align-middle">
+        <thead>
+            <tr>
+                <th>Chương trình</th>
+                <th>Loại</th>
+                <th>Mức giảm</th>
+                <th>Thời gian</th>
+                <th>Hiệu lực</th>
+                <th>Thao tác</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var k in Model)
+            {
+                <tr>
+                    <td>
+                        <strong>@k.TenKm</strong>
+                    </td>
+                    <td>@k.LoaiKm</td>
+                    <td>@ShopRules.Money(k.GiaTriKm)</td>
+                    <td>@k.NgayBd.ToString("dd/MM/yyyy HH:mm")<br>@k.NgayKt.ToString("dd/MM/yyyy HH:mm")</td>
+                    <td>
+                        <span class="status-badge @(ShopRules.Active(k, ShopRules.Now) ? "status-paid" : "")">@(k.LoaiKm == "Nothing" ? "Mặc định" : ShopRules.Active(k, ShopRules.Now) ? "Đang áp dụng" : k.NgayBd > ShopRules.Now ? "Chưa bắt đầu" : "Đã hết hạn")</span>
+                    </td>
+                    <td>
+                        <div class="table-actions">
+                            <a asp-action="Edit" asp-route-id="@k.MaKm" class="btn btn-outline-success btn-sm">Sửa</a>
+                            <a asp-action="Details" asp-route-id="@k.MaKm" class="btn btn-light btn-sm">Xem</a>
+                            <a asp-action="Delete" asp-route-id="@k.MaKm" class="btn btn-outline-danger btn-sm">Xóa</a>
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

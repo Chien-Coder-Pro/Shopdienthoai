@@ -1,0 +1,13 @@
+@model ErrorViewModel
+@{
+	ViewData["Title"] = "Chưa thể xử lý yêu cầu";
+}
+<div class="empty-state">
+	<h1>Chưa thể xử lý yêu cầu</h1>
+	<p>Vui lòng thử lại sau hoặc liên hệ ChienNguyenShop để được hỗ trợ.</p>@if(Model.ShowRequestId){
+	<small>Mã tra cứu: @Model.RequestId</small>
+		}
+<p class="mt-3">
+		<a class="btn btn-success" asp-controller="Customer" asp-action="Index">Về trang chủ</a>
+	</p>
+</div>

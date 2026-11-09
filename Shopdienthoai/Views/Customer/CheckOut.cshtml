@@ -1,0 +1,79 @@
+@model CheckoutForm
+@{
+	ViewData["Title"] = "Xác nhận đặt hàng"; var cart = (CartViewModel)ViewBag.Cart; var user = (Nguoidung)ViewBag.CurrentUser; var discount = ShopRules.Discount(cart.TongTien, user.MaHangNavigation.PhanTramGiam);
+}
+<div class="section-heading">
+	<div>
+		<span class="eyebrow">CHỈ CÒN MỘT BƯỚC</span>
+		<h1>Xác nhận đặt hàng</h1>
+	</div>
+</div>
+<form asp-action="CreateBill" method="post">
+	<input type="hidden" asp-for="Token">
+	<div asp-validation-summary="All" class="text-danger mb-3">
+	</div>
+	<div class="row g-4">
+		<div class="col-lg-7">
+			<div class="panel">
+				<h3>Thông tin nhận hàng</h3>
+				<div class="mb-3">
+					<label asp-for="NguoiNhan">Họ tên người nhận</label>
+					<input asp-for="NguoiNhan" class="form-control" autocomplete="name">
+				</div>
+				<div class="mb-3">
+					<label asp-for="Sdt">Số điện thoại</label>
+					<input asp-for="Sdt" class="form-control" autocomplete="tel">
+				</div>
+				<div class="mb-3">
+					<label asp-for="DiaChi">Địa chỉ giao hàng</label>
+<textarea asp-for="DiaChi" class="form-control" rows="3" autocomplete="street-address">
+</textarea>
+				</div>
+				<h3 class="mt-4">Phương thức thanh toán</h3>
+				<label class="payment-option">
+					<input asp-for="PhuongThucTt" type="radio" value="Trực tiếp">
+					<span>
+						<strong>Thanh toán trực tiếp</strong>
+						<small>Trả tiền tại cửa hàng hoặc khi nhận hàng. Shop xác nhận sau khi thu tiền.</small>
+					</span>
+				</label>
+				<label class="payment-option @(!(ViewBag.MomoEnabled is true) ? "disabled-option" : "")">
+					<input asp-for="PhuongThucTt" type="radio" value="MoMo" disabled="@(!(ViewBag.MomoEnabled is true))">
+					<span>
+						<strong>Thanh toán trực tuyến · MoMo Sandbox</strong>
+						<small>@(ViewBag.MomoEnabled is true ? "Thanh toán thử nghiệm qua MoMo sau khi lưu đơn." : "Shop chưa cấu hình môi trường thử nghiệm. Vui lòng chọn thanh toán trực tiếp.")</small>
+					</span>
+				</label>
+			</div>
+		</div>
+		<div class="col-lg-5">
+			<div class="panel order-summary">
+				<h3>Đơn hàng của bạn</h3>@foreach(var l in cart.Items){
+				<div class="checkout-item">
+					<img src="@ShopRules.Image(l.SanPham.HinhAnh)" alt="">
+					<div>
+						<strong>@l.SanPham.TenSp</strong>
+						<small>SL: @l.SoLuong · @ShopRules.Money(l.DonGia)</small>
+					</div>
+					<span>@ShopRules.Money(l.ThanhTien)</span>
+				</div>
+								}
+<hr>
+				<div class="summary-line">
+					<span>Tiền hàng</span>
+					<strong>@ShopRules.Money(cart.TongTien)</strong>
+				</div>
+				<div class="summary-line">
+					<span>Ưu đãi @user.MaHangNavigation.TenHang (@user.MaHangNavigation.PhanTramGiam%)</span>
+					<strong class="text-green">−@ShopRules.Money(discount)</strong>
+				</div>
+				<div class="summary-line summary-total">
+					<span>Tổng thanh toán</span>
+					<strong>@ShopRules.Money(cart.TongTien - discount)</strong>
+				</div>
+				<p class="muted-note">Giá và tồn kho được kiểm tra lại khi xác nhận. Đơn được tiếp nhận ở trạng thái Chờ xử lý.</p>
+				<button class="btn btn-success w-100 py-3" disabled="@(cart.Errors.Count > 0)">Xác nhận đặt hàng</button>
+			</div>
+		</div>
+	</div>
+</form>

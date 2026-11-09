@@ -1,0 +1,54 @@
+@model LoginForm
+@{
+	ViewData["Title"] = "Đăng nhập";
+}
+<section class="auth-shell">
+	<aside class="auth-visual">
+		<span class="eyebrow">CHIENNGUYENSHOP</span>
+		<h2>Một tài khoản.<br>Nhiều kết nối mới.</h2>
+		<p>Khám phá điện thoại phù hợp,<br>theo dõi đơn hàng và nhận ưu đãi thành viên.</p>
+		<div class="auth-logo-card">
+			<img src="/image/logo.png" alt="ChienNguyenShop">
+		</div>
+		<span class="auth-location">Long Xuyên, An Giang · 0384 229 772</span>
+	</aside>
+	<div class="auth-form">
+		<span class="eyebrow">CHÀO MỪNG TRỞ LẠI</span>
+		<h1>Đăng nhập</h1>
+		<p class="text-muted">Tiếp tục hành trình mua sắm của bạn.</p>
+		<form asp-action="Login" method="post">
+			<input asp-for="ReturnUrl" type="hidden">
+			<div asp-validation-summary="All" class="text-danger">
+			</div>
+			<div class="mb-3">
+				<label asp-for="TaiKhoan">Tài khoản hoặc email</label>
+				<input asp-for="TaiKhoan" class="form-control" autocomplete="username" placeholder="Nhập tài khoản hoặc email">
+				<span asp-validation-for="TaiKhoan" class="text-danger">
+				</span>
+			</div>
+			<div class="mb-4">
+				<label asp-for="MatKhau">Mật khẩu</label>
+				<div class="password-wrap">
+					<input asp-for="MatKhau" class="form-control" autocomplete="current-password" placeholder="Nhập mật khẩu">
+					<button type="button" class="password-toggle" aria-label="Hiện mật khẩu">Hiện</button>
+				</div>
+				<span asp-validation-for="MatKhau" class="text-danger">
+				</span>
+			</div>
+			<button class="btn btn-success w-100 py-3">Đăng nhập</button>
+		</form>
+		<div class="auth-divider">
+			<span>hoặc</span>
+		</div>
+		<form asp-action="Google" method="post">
+			<button class="btn-google w-100" disabled="@(!(ViewBag.GoogleEnabled is true))">
+				<span class="google-mark">G</span> Tiếp tục với Google
+			</button>
+		</form>@if(!(ViewBag.GoogleEnabled is true)){
+		<p class="form-hint text-center mt-2">Google sẽ khả dụng sau khi shop hoàn tất cấu hình.</p>
+				}
+<p class="auth-switch">
+			Chưa có tài khoản? <a asp-action="Register">Đăng ký ngay</a>
+		</p>
+	</div>
+</section>

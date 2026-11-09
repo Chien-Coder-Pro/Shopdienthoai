@@ -1,0 +1,56 @@
+@model List<Hoadon>
+@{
+	ViewData["Title"] = "Đơn hàng của tôi";
+}
+<div class="section-heading">
+	<div>
+		<span class="eyebrow">THEO DÕI HÀNH TRÌNH</span>
+		<h1>Đơn hàng của tôi</h1>
+	</div>
+</div>
+@if (Model.Count == 0)
+{
+	<div class="empty-state">
+		<h3>Bạn chưa có đơn hàng nào</h3>
+		<a asp-action="Index" class="btn btn-success">Khám phá điện thoại</a>
+	</div>
+}
+else
+{
+	<div class="panel table-responsive">
+		<table class="table align-middle">
+			<thead>
+				<tr>
+					<th>Mã đơn</th>
+					<th>Ngày đặt</th>
+					<th>Tổng thanh toán</th>
+					<th>Đơn hàng</th>
+					<th>Thanh toán</th>
+					<th>
+					</th>
+				</tr>
+			</thead>
+			<tbody>
+				@foreach (var h in Model)
+				{
+					<tr>
+						<td>
+							<strong>#@h.MaHd</strong>
+						</td>
+						<td>@h.NgayLap.ToString("dd/MM/yyyy HH:mm")</td>
+						<td>@ShopRules.Money(h.TongThanhToan)</td>
+						<td>
+							<span class="status-badge">@h.TrangThai</span>
+						</td>
+						<td>
+							<span class="@(h.TrangThaiThanhToan == ShopRules.Paid ? "text-green" : "text-muted")">@h.TrangThaiThanhToan</span>
+						</td>
+						<td>
+							<a class="btn btn-outline-success btn-sm" asp-action="OrderDetails" asp-route-id="@h.MaHd">Xem đơn</a>
+						</td>
+					</tr>
+				}
+			</tbody>
+		</table>
+	</div>
+}

@@ -1,0 +1,36 @@
+@model Sanpham
+@{
+	var price = ShopRules.Price(Model, ShopRules.Now);
+}
+<article class="product-card">
+	<a asp-controller="Customer" asp-action="Details" asp-route-id="@Model.MaSp" class="product-image-wrap" aria-label="Xem @Model.TenSp">
+		<img src="@ShopRules.Image(Model.HinhAnh)" alt="@Model.TenSp" loading="lazy">@if(price<Model.DonGia){
+		<span class="product-label">Giảm @ShopRules.Money(Model.DonGia - price)</span>
+				}
+	</a>
+	<div class="product-info">
+		<div class="product-meta">@(Model.Ram) RAM · @(Model.Rom)</div>
+		<a class="product-title" asp-controller="Customer" asp-action="Details" asp-route-id="@Model.MaSp">@Model.TenSp</a>
+		<div class="product-price">@ShopRules.Money(price)</div>
+		<div class="price-space">
+			@if (price < Model.DonGia)
+			{
+				<del>@ShopRules.Money(Model.DonGia)</del>
+			}
+			else
+			{
+				<span>Giá niêm yết</span>
+			}
+		</div>
+		<div class="product-rating">
+			<span class="star">★</span> @Model.SoSao <span class="text-muted">(@Model.SoDanhGia đánh giá)</span>
+		</div>
+		<div class="product-bottom">
+			<span class="stock @(Model.SoLuong == 0 ? "sold-out" : "")">@(Model.SoLuong > 0 ? "Còn hàng" : "Hết hàng")</span>
+			<form asp-controller="Customer" asp-action="AddToCart" method="post">
+				<input type="hidden" name="id" value="@Model.MaSp">
+				<button class="btn-add" disabled="@(Model.SoLuong <= 0)" aria-label="Thêm @Model.TenSp vào giỏ">+</button>
+			</form>
+		</div>
+	</div>
+</article>

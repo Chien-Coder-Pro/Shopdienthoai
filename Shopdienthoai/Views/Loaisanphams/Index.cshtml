@@ -1,0 +1,37 @@
+@model List<Loaisanpham>
+@{
+    ViewData["Title"] = "Hãng sản phẩm";
+}
+<div class="section-heading">
+    <h1>Hãng sản phẩm</h1>
+    <a asp-action="Create" class="btn btn-success">+ Thêm hãng</a>
+</div>
+<div class="panel table-responsive">
+    <table class="table align-middle">
+        <thead>
+            <tr>
+                <th>Hãng</th>
+                <th>Mô tả</th>
+                <th>Thao tác</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var b in Model)
+            {
+                <tr>
+                    <td>
+                        <strong>@b.TenLsp</strong>
+                    </td>
+                    <td>@b.Mota</td>
+                    <td>
+                        <div class="table-actions">
+                            <a asp-action="Edit" asp-route-id="@b.MaLsp" class="btn btn-outline-success btn-sm">Chỉnh sửa</a>
+                            <a asp-action="Details" asp-route-id="@b.MaLsp" class="btn btn-light btn-sm">Xem</a>
+                            <a asp-action="Delete" asp-route-id="@b.MaLsp" class="btn btn-outline-danger btn-sm">Xóa</a>
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

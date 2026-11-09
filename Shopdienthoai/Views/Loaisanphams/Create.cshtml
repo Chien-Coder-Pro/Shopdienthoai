@@ -1,0 +1,25 @@
+@model Loaisanpham
+@{
+    ViewData["Title"] = "Thêm hãng";
+}
+<div class="panel narrow-panel">
+    <h1>@ViewData["Title"]</h1>
+    <form asp-action="Create" method="post" enctype="multipart/form-data">
+        <input asp-for="MaLsp" type="hidden">
+        <div asp-validation-summary="All" class="text-danger"></div>
+        <div class="mb-3">
+            <label asp-for="TenLsp">Tên hãng</label>
+            <input asp-for="TenLsp" class="form-control">
+        </div>
+        <div class="mb-3">
+            <label asp-for="Mota">Mô tả</label>
+<textarea asp-for="Mota" class="form-control" rows="3">
+</textarea>
+        </div>
+        <div class="mb-4">
+            <label for="upload">Ảnh/logo hãng (không bắt buộc)</label>
+            <input id="upload" name="upload" type="file" class="form-control" accept="image/jpeg,image/png,image/webp">
+        </div>
+        <button class="btn btn-success">Lưu hãng</button> <a asp-action="Index" class="btn btn-light">Quay lại</a>
+    </form>
+</div>

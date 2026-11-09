@@ -1,0 +1,49 @@
+@model Sanpham
+@{
+    ViewData["Title"] = "Chi tiết sản phẩm";
+}
+<div class="section-heading">
+    <h1>@Model.TenSp</h1>
+    <a asp-action="Edit" asp-route-id="@Model.MaSp" class="btn btn-success">Chỉnh sửa</a>
+</div>
+<div class="row g-4">
+    <div class="col-md-4">
+        <div class="panel">
+            <img class="upload-preview" src="@ShopRules.Image(Model.HinhAnh)" alt="@Model.TenSp">
+        </div>
+    </div>
+    <div class="col-md-8">
+        <div class="panel">
+            <table class="table">
+                <tbody>
+                    <tr>
+                        <th>Hãng</th>
+                        <td>@Model.MaLspNavigation.TenLsp</td>
+                    </tr>
+                    <tr>
+                        <th>Giá niêm yết</th>
+                        <td>@ShopRules.Money(Model.DonGia)</td>
+                    </tr>
+                    <tr>
+                        <th>Giá hiện tại</th>
+                        <td>@ShopRules.Money(ShopRules.Price(Model, ShopRules.Now))</td>
+                    </tr>
+                    <tr>
+                        <th>Tồn kho</th>
+                        <td>@Model.SoLuong</td>
+                    </tr>
+                    <tr>
+                        <th>Khuyến mãi</th>
+                        <td>@Model.MaKmNavigation.TenKm</td>
+                    </tr>@foreach(var f in new[]{("Màn hình",Model.ManHinh),("Hệ điều hành",Model.Hdh),("CPU",Model.Cpu),("Camera sau",Model.CamSau),("Camera trước",Model.CamTruoc),("RAM",Model.Ram),("Bộ nhớ",Model.Rom),("Thẻ nhớ",Model.Sdcard),("Pin",Model.Pin)}){
+                    <tr>
+                        <th>@f.Item1</th>
+                        <td>@f.Item2</td>
+                    </tr>
+                                        }
+                </tbody>
+            </table>
+            <a asp-action="Index" class="btn btn-light">Quay lại</a>
+        </div>
+    </div>
+</div>

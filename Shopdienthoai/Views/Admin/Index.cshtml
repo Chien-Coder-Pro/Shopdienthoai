@@ -1,0 +1,84 @@
+@{
+	ViewData["Title"] = "Tổng quan"; var top = (List<TopProduct>)ViewBag.Top; var low = (List<Sanpham>)ViewBag.LowStock;
+}
+<div class="section-heading">
+	<div>
+		<span class="eyebrow">CHÀO NGÀY MỚI</span>
+		<h1>
+			Cửa hàng trong tầm tay<span class="text-green">.</span>
+		</h1>
+		<p class="text-muted mb-0">Theo dõi hoạt động và những việc cần xử lý.</p>
+	</div>
+	<a asp-action="Customers" asp-route-eligible="true" class="btn btn-success">@ViewBag.UpgradeCount khách đủ điều kiện nâng hạng</a>
+</div>
+<form class="panel d-flex flex-wrap gap-3 align-items-end mb-4" method="get">
+	<div>
+		<label for="from">Từ ngày</label>
+		<input id="from" name="from" type="date" class="form-control" value="@(((DateTime)ViewBag.From).ToString("yyyy-MM-dd"))">
+	</div>
+	<div>
+		<label for="to">Đến ngày</label>
+		<input id="to" name="to" type="date" class="form-control" value="@(((DateTime)ViewBag.To).ToString("yyyy-MM-dd"))">
+	</div>
+	<button class="btn btn-outline-success">Lọc báo cáo</button>
+	<small class="text-muted">Doanh thu tính theo ngày lập của đơn đã giao và đã thanh toán.</small>
+</form>
+<div class="stats-grid">
+	<div class="stat-card featured">
+		<span>Doanh thu trong kỳ</span>
+		<strong>@ShopRules.Money((decimal)ViewBag.Revenue)</strong>
+		<small>Đơn đã giao và thanh toán</small>
+	</div>
+	<div class="stat-card">
+		<span>Đơn trong kỳ</span>
+		<strong>@ViewBag.OrderCount</strong>
+		<small>Tất cả trạng thái</small>
+	</div>
+	<div class="stat-card">
+		<span>Đang chờ xử lý</span>
+		<strong>@ViewBag.Waiting</strong>
+		<small>Cần bạn kiểm tra</small>
+	</div>
+	<div class="stat-card">
+		<span>Khách hàng</span>
+		<strong>@ViewBag.CustomerCount</strong>
+		<small>Đã tạo tài khoản</small>
+	</div>
+</div>
+<div class="row g-4 mt-1">
+	<div class="col-lg-7">
+		<div class="panel h-100">
+			<h3>Sản phẩm bán chạy trong kỳ</h3>@if(top.Count==0){
+			<p class="text-muted">Chưa có đơn đủ điều kiện trong khoảng ngày này.</p>
+						}
+			@foreach (var p in top)
+			{
+				<div class="sales-row">
+					<div class="d-flex justify-content-between">
+						<strong>@p.Ten</strong>
+						<span>@p.SoLuong sản phẩm</span>
+					</div>
+					<div class="sales-track">
+						<div style="width:@((p.SoLuong * 100 / Math.Max(1, top.Max(x => x.SoLuong))))%">
+						</div>
+					</div>
+				</div>
+			}
+		</div>
+	</div>
+	<div class="col-lg-5">
+		<div class="panel h-100">
+			<h3>Hàng sắp hết</h3>
+			<p class="text-muted">Sản phẩm đang bán, còn tối đa 5 chiếc.</p>@if(low.Count==0){
+			<p class="text-green">Tồn kho hiện ổn định.</p>
+						}
+			@foreach (var p in low)
+			{
+				<div class="low-stock-row">
+					<a asp-controller="Sanphams" asp-action="Edit" asp-route-id="@p.MaSp">@p.TenSp</a>
+					<strong class="@(p.SoLuong == 0 ? "text-danger" : "text-green")">@p.SoLuong</strong>
+				</div>
+			}
+		</div>
+	</div>
+</div>

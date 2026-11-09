@@ -1,0 +1,59 @@
+@model List<Hoadon>
+@{
+	ViewData["Title"] = "Đơn hàng";
+}
+<div class="section-heading">
+	<h1>Quản lý đơn hàng</h1>
+	<span class="text-muted">@Model.Count đơn phù hợp</span>
+</div>
+<form class="filter-bar" method="get">
+	<input name="keyword" value="@ViewBag.Keyword" placeholder="Mã đơn, người nhận, số điện thoại" class="form-control">
+	<select class="form-select" name="status">
+		<option value="">Tất cả trạng thái</option>@foreach(var s in new[]{"Chờ xử lý","Đã xác nhận","Đang giao hàng","Đã giao hàng","Đã hủy"}){
+		<option selected="@((string?)ViewBag.Status == s)">@s</option>
+				}
+	</select>
+	<button class="btn btn-success">Tìm đơn</button>
+</form>
+<div class="panel table-responsive">
+	<table class="table align-middle">
+		<thead>
+			<tr>
+				<th>Mã</th>
+				<th>Khách hàng / ngày đặt</th>
+				<th>Người nhận</th>
+				<th>Thanh toán</th>
+				<th>Tổng tiền</th>
+				<th>Trạng thái</th>
+				<th>
+				</th>
+			</tr>
+		</thead>
+		<tbody>
+			@foreach (var h in Model)
+			{
+				<tr>
+					<td>#@h.MaHd</td>
+					<td>
+						@h.MaNdNavigation.TaiKhoan<small class="d-block text-muted">@h.NgayLap.ToString("dd/MM/yyyy HH:mm")</small>
+					</td>
+					<td>
+						@h.NguoiNhan<small class="d-block">@h.Sdt</small>
+					</td>
+					<td>
+						@h.PhuongThucTt<small class="d-block @(h.TrangThaiThanhToan == ShopRules.Paid ? "text-green" : "text-muted")">@h.TrangThaiThanhToan</small>
+					</td>
+					<td>@ShopRules.Money(h.TongThanhToan)</td>
+					<td>
+						<span class="status-badge">@h.TrangThai</span>
+					</td>
+					<td>
+						<a asp-action="OrderDetails" asp-route-id="@h.MaHd" class="btn btn-outline-success btn-sm">Chi tiết</a>
+					</td>
+				</tr>
+			}
+		</tbody>
+	</table>@if(Model.Count==0){
+	<p class="text-muted">Chưa có đơn hàng phù hợp.</p>
+		}
+</div>

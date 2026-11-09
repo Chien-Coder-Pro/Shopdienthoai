@@ -1,0 +1,122 @@
+@{
+	var customer = ViewBag.CurrentUser as Nguoidung;
+}
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="theme-color" content="#16a34a">
+	<title>@ViewData["Title"] · ChienNguyenShop</title>
+	<link rel="icon" href="~/image/logo.png">
+	<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css">
+	<link rel="stylesheet" href="~/css/site.css" asp-append-version="true">
+</head>
+<body>
+	<a class="skip-link" href="#main">Đến nội dung chính</a>
+	<div class="topbar">
+		<div class="container d-flex justify-content-between">
+			<span>Công nghệ gần bạn hơn.</span>
+			<span>
+				Long Xuyên, An Giang <span class="d-none d-sm-inline">
+					· Tư vấn <a href="tel:0384229772">0384 229 772</a>
+				</span>
+			</span>
+		</div>
+	</div>
+	<header class="shop-header">
+		<nav class="container navbar navbar-expand-lg py-3 gap-3">
+			<a class="navbar-brand m-0" asp-controller="Customer" asp-action="Index">
+				<img src="~/image/logo.png" class="brand-logo" alt="ChienNguyenShop">
+			</a>
+			<form class="header-search" asp-controller="Customer" asp-action="Index" method="get" role="search">
+				<input aria-label="Tìm điện thoại" name="keyword" placeholder="Bạn đang tìm điện thoại nào?" value="@Context.Request.Query["keyword"]">
+				<button type="submit" aria-label="Tìm kiếm">Tìm kiếm</button>
+			</form>
+			<div class="header-actions">
+				<a asp-controller="Customer" asp-action="ViewCart" class="cart-link">
+					Giỏ hàng <span class="cart-badge">@(ViewBag.CartCount ?? 0)</span>
+				</a>
+				@if (customer != null)
+				{
+					<div class="dropdown">
+						<button class="account-button dropdown-toggle" data-bs-toggle="dropdown">@customer.Ten</button>
+						<ul class="dropdown-menu dropdown-menu-end">
+							<li>
+								<a class="dropdown-item" asp-controller="Customer" asp-action="CustomerInfo">Hồ sơ của tôi</a>
+							</li>
+							<li>
+								<a class="dropdown-item" asp-controller="Customer" asp-action="Orders">Đơn hàng của tôi</a>
+							</li>@if(ViewBag.IsAdmin is true){
+							<li>
+								<a class="dropdown-item" asp-controller="Admin" asp-action="Index">Trang quản trị</a>
+							</li>
+						}
+						<li>
+							<hr class="dropdown-divider">
+						</li>
+						<li>
+							<form asp-controller="Customer" asp-action="Signout" method="post">
+								<button class="dropdown-item">Đăng xuất</button>
+							</form>
+						</li>
+					</ul>
+				</div>
+								}
+								else
+				{
+					<a asp-controller="Customer" asp-action="Login" class="btn btn-success btn-sm rounded-pill px-3">Đăng nhập</a>
+				}
+			</div>
+		</nav>
+		<div class="brand-nav">
+			<div class="container d-flex align-items-center gap-2 overflow-auto py-2">
+				<a asp-controller="Customer" asp-action="Index" class="nav-chip">Tất cả điện thoại</a>@foreach(var b in (List<Loaisanpham>)(ViewBag.Brands??new List<Loaisanpham>())){
+				<a class="nav-chip" asp-controller="Customer" asp-action="Index" asp-route-brand="@b.MaLsp">@b.TenLsp</a>
+								}
+			</div>
+		</div>
+	</header>
+	<main id="main" class="container main-content">
+		<partial name="_Messages" />@RenderBody()
+	</main>
+	<footer class="shop-footer">
+		<div class="container">
+			<div class="row g-4">
+				<div class="col-lg-5">
+					<h4>
+						ChienNguyenShop<span class="text-green">.</span>
+					</h4>
+					<p class="footer-intro">Chọn chiếc điện thoại phù hợp với bạn.<br>Khám phá công nghệ, kết nối mỗi ngày.</p>
+				</div>
+				<div class="col-sm-6 col-lg-4">
+					<h6>Ghé thăm & kết nối</h6>
+					<p>
+						Long Xuyên, An Giang<br>
+						<a href="tel:0384229772">0384 229 772</a>
+					</p>
+				</div>
+				<div class="col-sm-6 col-lg-3">
+					<h6>Khách hàng</h6>
+					<a asp-controller="Customer" asp-action="Orders">Theo dõi đơn hàng</a>
+					<br>
+					<a asp-controller="Customer" asp-action="CustomerInfo">Tài khoản & ưu đãi</a>
+					<br>
+					<a asp-controller="Home" asp-action="Privacy">Thông tin & chính sách</a>
+				</div>
+			</div>
+			<div class="footer-bottom">© @ShopRules.Now.Year ChienNguyenShop · Đồ án ASP.NET Core MVC</div>
+		</div>
+	</footer>
+	<script src="~/lib/jquery/dist/jquery.min.js">
+	</script>
+	<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js">
+	</script>
+	<script src="~/lib/jquery-validation/dist/jquery.validate.min.js">
+	</script>
+	<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js">
+	</script>
+	<script src="~/js/site.js" asp-append-version="true">
+	</script>@await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

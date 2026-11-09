@@ -1,0 +1,63 @@
+@model ProfileForm
+@{
+	ViewData["Title"] = "Hoàn thiện tài khoản Google";
+}
+<section class="auth-shell">
+	<aside class="auth-visual">
+		<span class="eyebrow">CHIENNGUYENSHOP</span>
+		<h2>Một tài khoản.<br>Nhiều kết nối mới.</h2>
+		<p>Khám phá điện thoại phù hợp,<br>theo dõi đơn hàng và nhận ưu đãi thành viên.</p>
+		<div class="auth-logo-card">
+			<img src="/image/logo.png" alt="ChienNguyenShop">
+		</div>
+		<span class="auth-location">Long Xuyên, An Giang · 0384 229 772</span>
+	</aside>
+	<div class="auth-form">
+		<span class="eyebrow">CHỈ THÊM MỘT CHÚT THÔNG TIN</span>
+		<h1>Hoàn thiện tài khoản</h1>
+		<p>
+			Email Google đã xác thực: <strong>@ViewBag.GoogleEmail</strong>
+		</p>
+		<p class="text-muted">Bổ sung thông tin để shop hỗ trợ và giao hàng cho bạn.</p>
+		<form asp-action="CompleteGoogle" method="post">
+			<div asp-validation-summary="All" class="text-danger">
+			</div>
+			<div class="row g-3">
+				<div class="col-sm-6">
+					<label asp-for="Ho">Họ và tên đệm</label>
+					<input asp-for="Ho" class="form-control" autocomplete="family-name">
+					<span asp-validation-for="Ho" class="text-danger">
+					</span>
+				</div>
+				<div class="col-sm-6">
+					<label asp-for="Ten">Tên</label>
+					<input asp-for="Ten" class="form-control" autocomplete="given-name">
+					<span asp-validation-for="Ten" class="text-danger">
+					</span>
+				</div>
+				<div class="col-sm-6">
+					<label asp-for="Sdt">Số điện thoại</label>
+					<input asp-for="Sdt" class="form-control" autocomplete="tel">
+					<span asp-validation-for="Sdt" class="text-danger">
+					</span>
+				</div>
+				<div class="col-sm-6">
+					<label asp-for="GioiTinh">Giới tính</label>
+					<select asp-for="GioiTinh" class="form-select">
+						<option>Nam</option>
+						<option>Nữ</option>
+						<option>Khác</option>
+					</select>
+				</div>
+				<div class="col-12">
+					<label asp-for="DiaChi">Địa chỉ</label>
+<textarea asp-for="DiaChi" class="form-control" rows="2" autocomplete="street-address">
+</textarea>
+					<span asp-validation-for="DiaChi" class="text-danger">
+					</span>
+				</div>
+			</div>
+			<button class="btn btn-success w-100 py-3 mt-4">Hoàn tất đăng ký</button>
+		</form>
+	</div>
+</section>

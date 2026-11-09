@@ -1,0 +1,20 @@
+@model Loaisanpham
+@{
+    ViewData["Title"] = "Xóa hãng sản phẩm";
+}
+<div class="panel narrow-panel">
+    <h1>Xóa hãng @Model.TenLsp?</h1>
+    <p>@Model.Mota</p>
+    @if (ViewBag.HasProducts is true)
+    {
+        <p class="text-danger">Hãng đang có sản phẩm nên không thể xóa.</p>
+    }
+    else
+    {
+        <form asp-action="Delete" asp-route-id="@Model.MaLsp" method="post" class="d-inline">
+            <input type="hidden" asp-for="MaLsp">
+            <button type="submit" class="btn btn-danger">Xác nhận xóa</button>
+        </form>
+    }
+    <a asp-action="Index" class="btn btn-light">Quay lại</a>
+</div>
