@@ -47,6 +47,77 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         });
     }
+    const chatPanel = document.getElementById("chatPanel");
+    const chatLauncher = document.getElementById("chatLauncher");
+    const chatClose = document.getElementById("chatClose");
+    const chatForm = document.getElementById("chatForm");
+    const chatInput = document.getElementById("chatInput");
+    const chatMessages = document.getElementById("chatMessages");
+    if (chatPanel && chatLauncher && chatClose && chatForm && chatInput && chatMessages) {
+        const setChatOpen = opened => {
+            chatPanel.hidden = !opened;
+            chatLauncher.setAttribute("aria-expanded", String(opened));
+            if (opened) chatInput.focus();
+        };
+        const appendChatMessage = (text, sender, products, link, linkText) => {
+            const message = document.createElement("div");
+            message.className = `chat-message chat-message-${sender}`;
+            message.textContent = text;
+            chatMessages.append(message);
+            if (Array.isArray(products) && products.length) {
+                const list = document.createElement("div");
+                list.className = "chat-products";
+                products.forEach(product => {
+                    const item = document.createElement("a");
+                    item.href = `/Customer/Details/${encodeURIComponent(product.id)}`;
+                    item.textContent = `${product.name} · ${product.price}`;
+                    list.append(item);
+                });
+                chatMessages.append(list);
+            }
+            if (link && linkText) {
+                const action = document.createElement("a");
+                action.className = "chat-action-link";
+                action.href = link;
+                action.textContent = linkText;
+                chatMessages.append(action);
+            }
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        };
+        chatLauncher.addEventListener("click", () => setChatOpen(chatPanel.hidden));
+        chatClose.addEventListener("click", () => setChatOpen(false));
+        document.querySelectorAll("[data-chat-suggestion]").forEach(button => {
+            button.addEventListener("click", () => {
+                chatInput.value = button.dataset.chatSuggestion || "";
+                chatForm.requestSubmit();
+            });
+        });
+        chatForm.addEventListener("submit", async event => {
+            event.preventDefault();
+            const message = chatInput.value.trim();
+            if (!message) return;
+            appendChatMessage(message, "user");
+            chatInput.value = "";
+            const sendButton = chatForm.querySelector("button[type='submit']");
+            if (sendButton) sendButton.disabled = true;
+            try {
+                const response = await fetch(chatForm.action, {
+                    method: "POST",
+                    body: new FormData(chatForm),
+                    headers: { "X-Requested-With": "XMLHttpRequest" }
+                });
+                const result = await response.json();
+                if (!response.ok) throw new Error(result.error || "Không thể gửi tin nhắn.");
+                appendChatMessage(result.answer, "bot", result.products, result.link, result.linkText);
+            } catch (error) {
+                const failure = error instanceof Error ? error.message : "Vui lòng thử lại sau.";
+                appendChatMessage(`Chat chưa thể trả lời: ${failure}`, "bot");
+            } finally {
+                if (sendButton) sendButton.disabled = false;
+                chatInput.focus();
+            }
+        });
+    }
     const canHover = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
     const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (canHover && !prefersReducedMotion) {
