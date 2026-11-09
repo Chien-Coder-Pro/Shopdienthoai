@@ -47,4 +47,13 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         });
     }
+    const canHover = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (canHover && !prefersReducedMotion) {
+        document.querySelectorAll(".product-card, .stat-card, .nav-chip, .btn, .btn-add, .cart-link, .account-button, .admin-sidebar nav > a, .pagination-shop a, .payment-option").forEach(element => {
+            element.classList.add("hover-motion");
+            element.addEventListener("pointerenter", () => element.classList.add("is-hovered"));
+            element.addEventListener("pointerleave", () => element.classList.remove("is-hovered"));
+        });
+    }
 });

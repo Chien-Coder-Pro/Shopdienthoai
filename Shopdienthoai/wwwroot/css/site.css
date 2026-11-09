@@ -1909,3 +1909,23 @@ small {
         font-size: 12px
     }
 }
+
+.hover-motion {
+    transition: transform .22s ease, box-shadow .22s ease
+}
+
+.product-card.hover-motion.is-hovered, .stat-card.hover-motion.is-hovered {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow)
+}
+
+.nav-chip.hover-motion.is-hovered, .btn.hover-motion.is-hovered, .btn-add.hover-motion.is-hovered,
+.cart-link.hover-motion.is-hovered, .account-button.hover-motion.is-hovered,
+.admin-sidebar nav > a.hover-motion.is-hovered, .pagination-shop a.hover-motion.is-hovered,
+.payment-option.hover-motion.is-hovered {
+    transform: translateY(-2px)
+}
+
+.btn-add.hover-motion.is-hovered {
+    transform: translateY(-2px) scale(1.08)
+}
